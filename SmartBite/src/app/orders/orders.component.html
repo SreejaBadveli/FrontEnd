@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartBite - Orders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="min-h-screen bg-white font-inter p-4 sm:p-6 md:p-8 flex flex-col items-center">
+
+  <!-- Header Section with glassmorphism effect -->
+  <app-header></app-header>
+
+  <!-- Content for Orders Component: Shop Cards -->
+  <main class="w-full max-w-6xl flex flex-col items-center space-y-8">
+    <!-- Page Title -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl sm:text-5xl font-bold text-gray-800 mb-2 tracking-tight">Choose Your Restaurant</h1>
+      <p class="text-gray-600 text-lg">Discover delicious food from our partner restaurants</p>
+    </div>
+
+    <!-- Shop Cards Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+      
+      <!-- Bikanervala Card -->
+      <div class="group bg-white backdrop-blur-sm rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 ease-out overflow-hidden hover:scale-105 border border-gray-200">
+        <!-- Food Image -->
+        <div class="relative h-48 bg-gradient-to-br from-orange-100 to-yellow-100 overflow-hidden">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-32 h-24 bg-gradient-to-br from-orange-200 to-yellow-200 rounded-xl flex items-center justify-center shadow-lg">
+              <span class="text-4xl">🥟</span>
+            </div>
+          </div>
+          <!-- Favorite Icon -->
+          <button class="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-all duration-300 hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-600 hover:text-red-500">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Card Content -->
+        <div class="p-6">
+          <!-- Restaurant Name -->
+          <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-green-600 transition-colors duration-300">Kitchen Bells</h3>
+          
+          <!-- Rating and Time -->
+          <div class="flex items-center space-x-4 mb-3">
+            <div class="flex items-center space-x-1">
+              <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+              <span class="text-sm font-semibold text-gray-700">4.5</span>
+            </div>
+            <span class="text-gray-400">•</span>
+            <span class="text-sm text-gray-600 font-medium">30-35 mins</span>
+          </div>
+
+          <!-- Cuisine Type -->
+          <p class="text-gray-600 text-sm mb-4">North Indian, Fast Food</p>
+          <p class="text-gray-500 text-xs">Egmore</p>
+
+          <!-- Order Button -->
+          <button (click)="navigateToMenu()" class="w-full mt-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white py-3 rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl">
+            Order Now
+          </button>
+        </div>
+      </div>
+
+      <!-- Pizza Hut Card -->
+      <div class="group bg-white backdrop-blur-sm rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 ease-out overflow-hidden hover:scale-105 border border-gray-200">
+        <!-- Food Image -->
+        <div class="relative h-48 bg-gradient-to-br from-red-100 to-orange-100 overflow-hidden">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-32 h-24 bg-gradient-to-br from-red-200 to-orange-200 rounded-xl flex items-center justify-center shadow-lg">
+              <span class="text-4xl">🍕</span>
+            </div>
+          </div>
+          <!-- Favorite Icon -->
+          <button class="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-all duration-300 hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-600 hover:text-red-500">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Card Content -->
+        <div class="p-6">
+          <!-- Restaurant Name -->
+          <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-green-600 transition-colors duration-300">Fresh N Healthy</h3>
+          
+          <!-- Rating and Time -->
+          <div class="flex items-center space-x-4 mb-3">
+            <div class="flex items-center space-x-1">
+              <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+              <span class="text-sm font-semibold text-gray-700">4.2</span>
+            </div>
+            <span class="text-gray-400">•</span>
+            <span class="text-sm text-gray-600 font-medium">25-30 mins</span>
+          </div>
+
+          <!-- Cuisine Type -->
+          <p class="text-gray-600 text-sm mb-4">Pizza, Italian, Fast Food</p>
+          <p class="text-gray-500 text-xs">T. Nagar</p>
+
+          <!-- Order Button -->
+          <button class="w-full mt-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white py-3 rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl">
+            Order Now
+          </button>
+        </div>
+      </div>
+
+      <!-- KFC Card -->
+      <div class="group bg-white backdrop-blur-sm rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 ease-out overflow-hidden hover:scale-105 border border-gray-200">
+        <!-- Food Image -->
+        <div class="relative h-48 bg-gradient-to-br from-red-100 to-yellow-100 overflow-hidden">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-32 h-24 bg-gradient-to-br from-red-200 to-yellow-200 rounded-xl flex items-center justify-center shadow-lg">
+              <span class="text-4xl">🍗</span>
+            </div>
+          </div>
+          <!-- Favorite Icon -->
+          <button class="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-all duration-300 hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-600 hover:text-red-500">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Card Content -->
+        <div class="p-6">
+          <!-- Restaurant Name -->
+          <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-green-600 transition-colors duration-300">Dosa House</h3>
+          
+          <!-- Rating and Time -->
+          <div class="flex items-center space-x-4 mb-3">
+            <div class="flex items-center space-x-1">
+              <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+              <span class="text-sm font-semibold text-gray-700">4.3</span>
+            </div>
+            <span class="text-gray-400">•</span>
+            <span class="text-sm text-gray-600 font-medium">20-25 mins</span>
+          </div>
+
+          <!-- Cuisine Type -->
+          <p class="text-gray-600 text-sm mb-4">Chicken, Fast Food, American</p>
+          <p class="text-gray-500 text-xs">Anna Nagar</p>
+
+          <!-- Order Button -->
+          <button class="w-full mt-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white py-3 rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl">
+            Order Now
+          </button>
+        </div>
+      </div>
+
+      <!-- McDonald's Card -->
+      <div class="group bg-white backdrop-blur-sm rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 ease-out overflow-hidden hover:scale-105 border border-gray-200">
+        <!-- Food Image -->
+        <div class="relative h-48 bg-gradient-to-br from-yellow-100 to-red-100 overflow-hidden">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-32 h-24 bg-gradient-to-br from-yellow-200 to-red-200 rounded-xl flex items-center justify-center shadow-lg">
+              <span class="text-4xl">🍔</span>
+            </div>
+          </div>
+          <!-- Favorite Icon -->
+          <button class="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-all duration-300 hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-600 hover:text-red-500">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Card Content -->
+        <div class="p-6">
+          <!-- Restaurant Name -->
+          <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-green-600 transition-colors duration-300">Tea .Com</h3>
+          
+          <!-- Rating and Time -->
+          <div class="flex items-center space-x-4 mb-3">
+            <div class="flex items-center space-x-1">
+              <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+              <span class="text-sm font-semibold text-gray-700">4.1</span>
+            </div>
+            <span class="text-gray-400">•</span>
+            <span class="text-sm text-gray-600 font-medium">15-20 mins</span>
+          </div>
+
+          <!-- Cuisine Type -->
+          <p class="text-gray-600 text-sm mb-4">Burgers, Fast Food, American</p>
+          <p class="text-gray-500 text-xs">Express Avenue</p>
+
+          <!-- Order Button -->
+          <button class="w-full mt-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white py-3 rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl">
+            Order Now
+          </button>
+        </div>
+      </div>
+
+      <!-- Saravana Bhavan Card -->
+      <div class="group bg-white backdrop-blur-sm rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 ease-out overflow-hidden hover:scale-105 border border-gray-200">
+        <!-- Food Image -->
+        <div class="relative h-48 bg-gradient-to-br from-green-100 to-yellow-100 overflow-hidden">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-32 h-24 bg-gradient-to-br from-green-200 to-yellow-200 rounded-xl flex items-center justify-center shadow-lg">
+              <span class="text-4xl">🫓</span>
+            </div>
+          </div>
+          <!-- Favorite Icon -->
+          <button class="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-all duration-300 hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-600 hover:text-red-500">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Card Content -->
+        <div class="p-6">
+          <!-- Restaurant Name -->
+          <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-green-600 transition-colors duration-300">Saravana Bhavan</h3>
+          
+          <!-- Rating and Time -->
+          <div class="flex items-center space-x-4 mb-3">
+            <div class="flex items-center space-x-1">
+              <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+              <span class="text-sm font-semibold text-gray-700">4.4</span>
+            </div>
+            <span class="text-gray-400">•</span>
+            <span class="text-sm text-gray-600 font-medium">25-30 mins</span>
+          </div>
+
+          <!-- Cuisine Type -->
+          <p class="text-gray-600 text-sm mb-4">South Indian, Vegetarian</p>
+          <p class="text-gray-500 text-xs">Mylapore</p>
+
+          <!-- Order Button -->
+          <button class="w-full mt-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white py-3 rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl">
+            Order Now
+          </button>
+        </div>
+      </div>
+
+      <!-- Domino's Card -->
+      <div class="group bg-white backdrop-blur-sm rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 ease-out overflow-hidden hover:scale-105 border border-gray-200">
+        <!-- Food Image -->
+        <div class="relative h-48 bg-gradient-to-br from-blue-100 to-red-100 overflow-hidden">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-32 h-24 bg-gradient-to-br from-blue-200 to-red-200 rounded-xl flex items-center justify-center shadow-lg">
+              <span class="text-4xl">🍕</span>
+            </div>
+          </div>
+          <!-- Favorite Icon -->
+          <button class="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-all duration-300 hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-600 hover:text-red-500">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Card Content -->
+        <div class="p-6">
+          <!-- Restaurant Name -->
+          <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-green-600 transition-colors duration-300">Chinese Restaurant</h3>
+          
+          <!-- Rating and Time -->
+          <div class="flex items-center space-x-4 mb-3">
+            <div class="flex items-center space-x-1">
+              <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+              <span class="text-sm font-semibold text-gray-700">4.0</span>
+            </div>
+            <span class="text-gray-400">•</span>
+            <span class="text-sm text-gray-600 font-medium">30-35 mins</span>
+          </div>
+
+          <!-- Cuisine Type -->
+          <p class="text-gray-600 text-sm mb-4">Pizza, Italian, Fast Food</p>
+          <p class="text-gray-500 text-xs">Adyar</p>
+
+          <!-- Order Button -->
+          <button class="w-full mt-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white py-3 rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl">
+            Order Now
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Load More Button -->
+    <div class="mt-12 text-center">
+      <button class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-8 py-3 rounded-xl border border-gray-300 transition-all duration-300 hover:scale-105 active:scale-95 font-semibold shadow-lg">
+        Load More Restaurants
+      </button>
+    </div>
+
+  </main>
+
+</body>
+</html>
