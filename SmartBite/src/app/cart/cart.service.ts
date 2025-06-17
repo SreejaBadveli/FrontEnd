@@ -152,7 +152,7 @@ export class CartService {
     }
 
     // 2 minute cancellation window
-    this.cancelTimer = timer(2 * 60 * 1000).subscribe(() => {
+    this.cancelTimer = timer(1 * 60 * 1000).subscribe(() => {
       const currentOrder = this.currentOrder.value;
       if (currentOrder && currentOrder.id === order.id) {
         currentOrder.canCancel = false;
