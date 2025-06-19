@@ -1,1 +1,12 @@
 <router-outlet></router-outlet>
+<app-popup-notification
+  *ngIf="popupNotification"
+  [show]="showPopupNotification"
+  [type]="popupNotification.type"
+  [icon]="popupNotification.icon"
+  [title]="popupNotification.title"
+  [message]="popupNotification.message"
+  [autoClose]="true"
+  [autoCloseDelay]="5000"
+  (closed)="onPopupClosed()">
+</app-popup-notification>

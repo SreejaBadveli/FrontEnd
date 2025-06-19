@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, timer, Subscription } from 'rxjs';
+import { NotificationService } from '../notification/notification.service';
 
 export interface CartItem {
   id: string;
@@ -21,6 +22,7 @@ export interface Order {
   estimatedTime: number; // in minutes
   queuePosition: number;
   canCancel: boolean;
+  remainingTime: number; // Optional, for displaying remaining time
 }
 
 @Injectable({
@@ -28,13 +30,14 @@ export interface Order {
 })
 export class CartService {
   private cartItems = new BehaviorSubject<CartItem[]>([]);
-  private currentOrder = new BehaviorSubject<Order | null>(null);
+  public currentOrders = new BehaviorSubject<Order[]>([]);
   private cancelTimer: Subscription | null = null;
+  private orderTimers: Map<string, any> = new Map();
 
   cartItems$ = this.cartItems.asObservable();
-  currentOrder$ = this.currentOrder.asObservable();
+  currentOrders$ = this.currentOrders.asObservable();
 
-  constructor() {
+  constructor(private notificationService: NotificationService) {
     // Load cart from localStorage if available
     const savedCart = localStorage.getItem('cartItems');
     if (savedCart) {
@@ -42,14 +45,27 @@ export class CartService {
     }
 
     // Load current order from localStorage if available
-    const savedOrder = localStorage.getItem('currentOrder');
-    if (savedOrder) {
-      const order = JSON.parse(savedOrder);
-      order.orderTime = new Date(order.orderTime);
-      this.currentOrder.next(order);
-      this.startCancelTimer(order);
-    }
+    const savedOrders = localStorage.getItem('currentOrders');
+    if (savedOrders) {
+    const orders = JSON.parse(savedOrders);
+    
+    // Ensure it's an array and convert orderTime strings back to Date objects
+    const ordersArray = Array.isArray(orders) ? orders : [orders];
+    const processedOrders = ordersArray.map(order => ({
+      ...order,
+      orderTime: new Date(order.orderTime)
+    }));
+    
+    this.currentOrders.next(processedOrders);
+    
+    // Start cancel timer for each order that can be cancelled
+    processedOrders.forEach(order => {
+      if (order.canCancel) {
+        this.startCancelTimer(order);
+      }
+    });
   }
+}
 
   addToCart(item: Omit<CartItem, 'quantity'>): void {
     const currentItems = this.cartItems.value;
@@ -112,68 +128,143 @@ export class CartService {
     return this.cartItems.value.reduce((count, item) => count + item.quantity, 0);
   }
 
-  createOrder(): void {
-    const items = this.cartItems.value;
-    if (items.length === 0) return;
+  createOrders(): void {
+  const items = this.cartItems.value;
+  if (items.length === 0) return;
 
+  // Group items by vendor
+  const itemsByVendor = items.reduce((acc, item) => {
+    acc[item.vendor] = acc[item.vendor] || [];
+    acc[item.vendor].push(item);
+    return acc;
+  }, {} as { [vendor: string]: CartItem[] });
+
+  const orders: Order[] = [];
+
+    for (const vendor in itemsByVendor) {
+    const vendorItems = itemsByVendor[vendor];
     const order: Order = {
-      id: this.generateOrderId(),
-      items: [...items],
-      totalAmount: this.getCartTotal(),
-      vendor: items[0].vendor, // Assuming all items from same vendor
+      id: this.generateOrderId(vendor),
+      items: vendorItems,
+      totalAmount: vendorItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
+      vendor: vendor,
       status: 'in_progress',
       orderTime: new Date(),
-      estimatedTime: 12, // Default 12 minutes
-      queuePosition: 3, // Default queue position
-      canCancel: true
+      estimatedTime: 12, 
+      queuePosition: 3,
+      canCancel: true,
+      remainingTime: 60 
     };
-
-    this.currentOrder.next(order);
-    this.clearCart();
-    this.saveOrderToStorage(order);
+    orders.push(order);
     this.startCancelTimer(order);
+
+    this.scheduleOrderNotifications(order);
   }
 
-  cancelOrder(): void {
-    const order = this.currentOrder.value;
-    if (order && order.canCancel) {
-      this.currentOrder.next(null);
-      localStorage.removeItem('currentOrder');
-      if (this.cancelTimer) {
-        this.cancelTimer.unsubscribe();
-        this.cancelTimer = null;
-      }
+  this.currentOrders.next(orders); 
+  this.clearCart();
+  this.saveOrdersToStorage(orders);
+}
+
+private scheduleOrderNotifications(order: Order): void {
+  // Immediate notification: Order confirmed
+  this.notificationService.addOrderConfirmedNotification(order.id, order.vendor);
+  
+  // Schedule notification after 90 seconds: Order ready
+  const readyTimer = setTimeout(() => {
+    this.notificationService.addOrderReadyNotification(order.id, order.vendor);
+    
+    // Update order status to completed
+    const currentOrders = this.currentOrders.value;
+    const updatedOrders = currentOrders.map(o => 
+      o.id === order.id ? { ...o, status: 'completed' as const } : o
+    );
+    this.currentOrders.next(updatedOrders);
+    this.saveOrdersToStorage(updatedOrders);
+    
+    // Clean up timer
+    this.orderTimers.delete(order.id);
+  }, 90000); // 90 seconds
+
+  // Store timer reference for cleanup
+  this.orderTimers.set(order.id, readyTimer);
+}
+
+cancelOrder(): void {
+  const orders = this.currentOrders.value;
+  const cancelledOrders = orders.filter(order => order.canCancel);
+  const updatedOrders = orders.filter(order => !order.canCancel);
+  
+  // Clean up timers for cancelled orders
+  cancelledOrders.forEach(order => {
+    const timer = this.orderTimers.get(order.id);
+    if (timer) {
+      clearTimeout(timer);
+      this.orderTimers.delete(order.id);
     }
+  });
+  
+  this.currentOrders.next(updatedOrders);
+  this.saveOrdersToStorage(updatedOrders);
+  
+  if (this.cancelTimer) {
+    this.cancelTimer.unsubscribe();
+    this.cancelTimer = null;
   }
+}
 
-  private startCancelTimer(order: Order): void {
-    if (this.cancelTimer) {
-      this.cancelTimer.unsubscribe();
-    }
+private startCancelTimer(order: Order): void {
+  const interval = setInterval(() => {
+    const currentOrders = this.currentOrders.value;
 
-    // 2 minute cancellation window
-    this.cancelTimer = timer(1 * 60 * 1000).subscribe(() => {
-      const currentOrder = this.currentOrder.value;
-      if (currentOrder && currentOrder.id === order.id) {
-        currentOrder.canCancel = false;
-        this.currentOrder.next({ ...currentOrder });
-        this.saveOrderToStorage(currentOrder);
+    // Find and update the specific order
+    const updatedOrders = currentOrders.map(o => {
+      if (o.id === order.id) {
+        if (o.remainingTime > 0) {
+          return { ...o, remainingTime: o.remainingTime - 1 }; // Decrement remainingTime
+        } else {
+          clearInterval(interval); // Stop the timer when time runs out
+          return { ...o, canCancel: false }; // Disable cancellation
+        }
       }
+      return o; // Keep other orders unchanged
     });
-  }
 
-  private generateOrderId(): string {
+    // Emit the updated orders array
+    this.currentOrders.next(updatedOrders);
+
+    // Save updated orders to storage
+    this.saveOrdersToStorage(updatedOrders);
+  }, 1000); // Update every second
+}
+
+  private generateOrderId(vendor: string): string {
     const date = new Date();
     const year = date.getFullYear();
     const orderNumber = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-    return `CFZ${year}-${orderNumber}`;
-  }
+
+    const words = vendor.trim().split(/\s+/);
+    const firstLetter = words[0]?.[0]?.toUpperCase() || '';
+    const secondLetter = words[1]?.[0]?.toUpperCase() || '';
+
+    return `${firstLetter}${secondLetter}${year}-${orderNumber}`;
+}
+
 
   private saveCartToStorage(): void {
     localStorage.setItem('cartItems', JSON.stringify(this.cartItems.value));
   }
 
-  private saveOrderToStorage(order: Order): void {
-    localStorage.setItem('currentOrder', JSON.stringify(order));
+  public saveOrdersToStorage(orders: Order[]): void {
+    localStorage.setItem('currentOrders', JSON.stringify(orders));
+  }
+
+  ngOnDestroy(): void {
+    this.orderTimers.forEach(timer => clearTimeout(timer));
+    this.orderTimers.clear();
+    
+    if (this.cancelTimer) {
+      this.cancelTimer.unsubscribe();
+    }
   }
 }

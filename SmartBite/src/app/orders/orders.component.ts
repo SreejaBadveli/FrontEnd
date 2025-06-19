@@ -10,9 +10,9 @@ export class OrdersComponent implements OnInit {
 
   constructor(private router :Router) { }
   
-    ngOnInit(): void {
-    }
-     navigateToMenu(): void {
-      this.router.navigate(['/menu']);
+    ngOnInit(): void {}
+
+     navigateToMenu(vendor: string): void {
+      this.router.navigate(['/menu', vendor]);
     }
 }

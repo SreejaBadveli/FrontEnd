@@ -1,0 +1,278 @@
+.notification-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.header {
+  font-size: 32px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.clear-all-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.notification-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.notification-item {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+
+  &:hover {
+    border-color: #d1d5db;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+  }
+
+  &.unread {
+    background: #f8fafc;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.1);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: #3b82f6;
+      border-radius: 12px 0 0 12px;
+    }
+  }
+}
+
+.notification-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.icon-container {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.icon-success {
+    background-color: #dcfce7;
+    color: #16a34a;
+  }
+
+  &.icon-info {
+    background-color: #dbeafe;
+    color: #2563eb;
+  }
+
+  &.icon-warning {
+    background-color: #fef3c7;
+    color: #d97706;
+  }
+
+  &.icon-error {
+    background-color: #fee2e2;
+    color: #dc2626;
+  }
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+}
+
+.notification-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.message {
+  font-size: 14px;
+  font-weight: 500;
+  color: #111827;
+  margin: 0 0 4px 0;
+  line-height: 1.4;
+}
+
+.timestamp {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+.notification-indicator {
+  width: 8px;
+  height: 8px;
+  background: #3b82f6;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 6px;
+  color: #9ca3af;
+  transition: all 0.2s;
+  flex-shrink: 0;
+
+  &:hover {
+    background: #f3f4f6;
+    color: #ef4444;
+  }
+}
+
+.delete-icon {
+  width: 16px;
+  height: 16px;
+}
+
+// No notifications state
+.no-notifications {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6b7280;
+}
+
+.no-notifications-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+  background: #f3f4f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+}
+
+.empty-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.no-notifications-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 8px 0;
+}
+
+.no-notifications-text {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+}
+
+// Responsive design
+@media (max-width: 640px) {
+  .notification-page {
+    padding: 16px 12px;
+  }
+
+  .header {
+    font-size: 24px;
+  }
+
+  .header-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .clear-all-btn {
+    align-self: flex-end;
+  }
+
+  .notification-item {
+    padding: 12px;
+  }
+
+  .icon-container {
+    width: 36px;
+    height: 36px;
+  }
+
+  .icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .message {
+    font-size: 13px;
+  }
+
+  .timestamp {
+    font-size: 11px;
+  }
+
+  .no-notifications {
+    padding: 40px 16px;
+  }
+
+  .no-notifications-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .empty-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .no-notifications-title {
+    font-size: 16px;
+  }
+
+  .no-notifications-text {
+    font-size: 13px;
+  }
+}

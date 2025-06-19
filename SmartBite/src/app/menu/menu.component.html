@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartBite - Kitchen Bells</title>
+    <title>SmartBite - {{vendor}}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
@@ -12,27 +12,29 @@
     </style>
 </head>
 <body class="min-h-screen bg-white font-inter p-4 sm:p-6 md:p-8 flex flex-col items-center">
-
-  <app-header></app-header>
+<div class="menu w-full max-w-6xl mx-auto">
+  <div class="w-full max-w-6xl top-0 fixed z-[1000] bg-white">
+    <app-header></app-header>
+  </div>
   <app-cart></app-cart> <!-- This is where your cart icon and sidebar are loaded -->
 
   <!-- Main Content -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
     
     <!-- Restaurant Header -->
-    <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
-      <h1 class="text-3xl font-bold text-gray-900 mb-4">Kitchen Bells</h1>
-      
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-6 mt-24">
+      <h1 class="text-3xl font-bold text-gray-900 mb-4">{{vendor}}</h1>
+
       <div class="flex items-center space-x-6 mb-4">
         <div class="flex items-center space-x-2">
           <div class="w-4 h-4 bg-green-500 rounded-full"></div>
-          <span class="font-semibold text-gray-900">4.5 (2.2K+ ratings)</span>
+          <span class="font-semibold text-gray-900">{{getVendorConfig().ratings}}</span>
         </div>
         <span class="text-gray-600">•</span>
-        <span class="font-semibold text-gray-900">₹350 for two</span>
+        <span class="font-semibold text-gray-900">{{getVendorConfig().price}}</span>
       </div>
 
-      <div class="text-orange-600 font-medium mb-4">North Indian, Fast Food</div>
+      <div class="text-orange-600 font-medium mb-4">{{getVendorConfig().cuisine}}</div>
 
       <div class="flex items-center space-x-4 text-sm text-gray-600">
         <div class="flex items-center space-x-2">
@@ -152,15 +154,38 @@
             </div>
             <!-- Enhanced ADD button styling -->
             <button 
+            *ngIf="!isItemInCart(item.id)"
               (click)="addToCart(item)"
+              style="
+    background:linear-gradient(90deg, #3DCD58, #2E8B3E)"
               class="absolute -bottom-3 left-1/2 transform -translate-x-1/2 
-                     bg-gradient-to-r from-green-500 to-emerald-600 
+                  
                      text-white font-bold py-2 px-6 rounded-lg shadow-xl 
                      hover:from-green-600 hover:to-emerald-700 
                      transition-all duration-300 ease-in-out 
                      hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75">
               ADD
             </button>
+
+             <div *ngIf="isItemInCart(item.id)" class="flex items-center space-x-2 bg-white rounded-lg shadow-xl border border-gray-200 p-1">
+                <button 
+                  (click)="decrementQuantity(item.id)"
+                  class="w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                  </svg>
+                </button>
+                
+                <span class="w-8 text-center font-bold text-gray-900">{{ getItemQuantity(item.id) }}</span>
+                
+                <button 
+                  (click)="incrementQuantity(item.id)"
+                  class="w-8 h-8 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                </button>
+              </div>
           </div>
         </div>
 
@@ -178,6 +203,6 @@
       </div>
     </div>
   </div>
-
+</div>
 </body>
 </html>
