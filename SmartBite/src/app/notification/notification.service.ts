@@ -140,6 +140,15 @@ export class NotificationService {
     });
   }
 
+  addOrderCancelledNotification(orderId: string, vendor: string): void {
+  this.addNotification({
+    icon: 'warning',
+    message: `Order #${orderId} from ${vendor} has been cancelled.`,
+    type: 'warning',
+    orderId: orderId
+  });
+}
+
   private updateUnreadCount(): void {
     const unreadCount = this.notifications.value.filter(notif => !notif.isRead).length;
     this.unreadCount.next(unreadCount);

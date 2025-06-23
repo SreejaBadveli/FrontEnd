@@ -28,7 +28,7 @@
       </div>
      <div *ngIf="currentOrder.canCancel" class="flex flex-col sm:flex-row items-center justify-center gap-2">
       <button 
-        (click)="cancelOrder(currentOrder.id)"
+        (click)="cancelOrder(currentOrder.id, currentOrder.vendor)"
         class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-xl border border-red-200 transition-all duration-300 font-semibold mb-2">
         Cancel Order
       </button>

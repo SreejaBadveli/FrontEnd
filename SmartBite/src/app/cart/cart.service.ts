@@ -172,15 +172,20 @@ private scheduleOrderNotifications(order: Order): void {
   
   // Schedule notification after 90 seconds: Order ready
   const readyTimer = setTimeout(() => {
-    this.notificationService.addOrderReadyNotification(order.id, order.vendor);
-    
-    // Update order status to completed
+    // Check if order still exists and wasn't cancelled
     const currentOrders = this.currentOrders.value;
-    const updatedOrders = currentOrders.map(o => 
-      o.id === order.id ? { ...o, status: 'completed' as const } : o
-    );
-    this.currentOrders.next(updatedOrders);
-    this.saveOrdersToStorage(updatedOrders);
+    const orderStillExists = currentOrders.find(o => o.id === order.id);
+    
+    if (orderStillExists) {
+      this.notificationService.addOrderReadyNotification(order.id, order.vendor);
+      
+      // Update order status to completed
+      const updatedOrders = currentOrders.map(o => 
+        o.id === order.id ? { ...o, status: 'completed' as const } : o
+      );
+      this.currentOrders.next(updatedOrders);
+      this.saveOrdersToStorage(updatedOrders);
+    }
     
     // Clean up timer
     this.orderTimers.delete(order.id);
@@ -191,10 +196,16 @@ private scheduleOrderNotifications(order: Order): void {
 }
 
 cancelOrder(): void {
+  console.log("cancelOrder called");
   const orders = this.currentOrders.value;
   const cancelledOrders = orders.filter(order => order.canCancel);
   const updatedOrders = orders.filter(order => !order.canCancel);
   
+  cancelledOrders.forEach(order => {
+    console.log(`Cancelling order: ${order.id}`);
+    this.notificationService.addOrderCancelledNotification(order.id, order.vendor);
+  });
+
   // Clean up timers for cancelled orders
   cancelledOrders.forEach(order => {
     const timer = this.orderTimers.get(order.id);

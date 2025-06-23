@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CartService, Order, CartItem } from '../cart/cart.service'; // Import CartService and Order/CartItem interfaces
 import { Subscription } from 'rxjs'; // Import Subscription for managing observables
+import { NotificationService } from '../notification/notification.service';
 
 @Component({
   selector: 'app-homepage',
@@ -16,7 +17,8 @@ export class HomepageComponent implements OnInit, OnDestroy {
   showCancelButton: boolean = false;
   constructor(
     private router: Router,
-    private cartService: CartService 
+    private cartService: CartService,
+    private notificationService: NotificationService 
   ) { }
 
   ngOnInit(): void {
@@ -44,7 +46,9 @@ export class HomepageComponent implements OnInit, OnDestroy {
     return items.map(item => `${item.name} x${item.quantity}`).join(' + ');
   }
 
-cancelOrder(orderId: string): void {
+cancelOrder(orderId: string, vendor: string): void {
+
+  this.notificationService.addOrderCancelledNotification(orderId, vendor);
   const updatedOrders = this.currentOrders.filter(order => order.id !== orderId);
 
   this.currentOrders = updatedOrders;
